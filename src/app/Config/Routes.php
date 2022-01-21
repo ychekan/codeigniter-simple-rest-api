@@ -33,6 +33,14 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+// API
+$routes->group("api", function ($routes) {
+
+    $routes->post("register", "User::register");
+    $routes->post("login", "User::login");
+    $routes->get("profile", "User::details");
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

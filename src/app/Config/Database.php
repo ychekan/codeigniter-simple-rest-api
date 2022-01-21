@@ -32,11 +32,11 @@ class Database extends Config
      */
     public $default = [
         'DSN'      => '',
-        'hostname' => 'localhost',
-        'username' => '',
-        'password' => '',
-        'database' => '',
-        'DBDriver' => 'MySQLi',
+        'hostname' => 'database',
+        'username' => 'postgres',
+        'password' => 'secret',
+        'database' => 'codeig',
+        'DBDriver' => 'Postgre',
         'DBPrefix' => '',
         'pConnect' => false,
         'DBDebug'  => (ENVIRONMENT !== 'production'),
@@ -47,7 +47,7 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 3306,
+        'port'     => '5432',
     ];
 
     /**
@@ -58,7 +58,7 @@ class Database extends Config
      */
     public $tests = [
         'DSN'      => '',
-        'hostname' => '127.0.0.1',
+        'hostname' => 'localhost',
         'username' => '',
         'password' => '',
         'database' => ':memory:',

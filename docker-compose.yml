@@ -9,7 +9,7 @@ services:
       - ./apache.conf:/etc/apache2/sites-available/000-default.conf
       - ./src:/var/www/html
     ports:
-      - 8081:80
+      - 8080:80
     links:
       - database
     environment:
@@ -25,3 +25,9 @@ services:
       - 5432:5432
     environment:
       - POSTGRES_PASSWORD=secret
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"

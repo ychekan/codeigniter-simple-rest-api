@@ -2,7 +2,9 @@
 
 namespace Config;
 
+use App\Services\Users\ValidateUserService;
 use CodeIgniter\Config\BaseService;
+use App\Services\Users\CreateUserService;
 
 /**
  * Services Configuration file.
@@ -29,4 +31,12 @@ class Services extends BaseService
      *     return new \CodeIgniter\Example();
      * }
      */
+
+    /**
+     * @return CreateUserService
+     */
+    public static function createUserService(): CreateUserService
+    {
+        return new CreateUserService();
+    }
 }
