@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Validators\Api;
+namespace App\Validators\Api\Auth;
 
 use App\Validators\MainValidator;
 

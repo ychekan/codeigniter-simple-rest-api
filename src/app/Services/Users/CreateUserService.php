@@ -2,10 +2,8 @@
 
 namespace App\Services\Users;
 
-use App\Controllers\User;
 use App\Models\UserModel;
 use App\Services\MainService;
-use Config\Services;
 
 class CreateUserService extends MainService
 {

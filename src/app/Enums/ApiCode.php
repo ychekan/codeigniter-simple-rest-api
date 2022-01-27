@@ -13,6 +13,9 @@ class ApiCode
     // 204
     const NoContent = 'NO_CONTENT';
 
+    // 400
+    const BadRequest = 'BAD_REQUEST';
+
     // 401
     const Unauthorized = 'UNAUTHORIZED';
 

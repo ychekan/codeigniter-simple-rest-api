@@ -4,6 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use Config\Services;
+use Exception;
 
 class UserModel extends Model
 {
@@ -14,12 +15,12 @@ class UserModel extends Model
     protected $insertID = 0;
     protected $returnType = 'array';
     protected $useSoftDeletes = false;
-    protected $protectFields = true;
+    protected $protectFields = false;
     protected $allowedFields = [
         "email",
         "username",
         "name",
-        "password",
+//        "password",
         "role_id",
         "hash",
         "verified_at",
@@ -104,5 +105,23 @@ class UserModel extends Model
         ]));
 
         $email->send();
+    }
+
+    /**
+     * @param string $emailAddress
+     * @return array|object
+     * @throws Exception
+     */
+    public function findUserByEmailAddress(string $emailAddress)
+    {
+        $user = $this
+            ->asArray()
+            ->where(['email' => $emailAddress])
+            ->first();
+
+        if (!$user) {
+            throw new Exception('User does not exist for specified email address');
+        }
+        return $user;
     }
 }

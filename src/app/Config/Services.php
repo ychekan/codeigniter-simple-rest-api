@@ -2,7 +2,6 @@
 
 namespace Config;
 
-use App\Services\Users\ValidateUserService;
 use CodeIgniter\Config\BaseService;
 use App\Services\Users\CreateUserService;
 
@@ -38,5 +37,11 @@ class Services extends BaseService
     public static function createUserService(): CreateUserService
     {
         return new CreateUserService();
+    }
+
+
+    public static function getSecretKey()
+    {
+        return getenv('JWT_SECRET_KEY');
     }
 }
