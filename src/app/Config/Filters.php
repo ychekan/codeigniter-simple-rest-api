@@ -2,6 +2,7 @@
 
 namespace Config;
 
+use App\Filters\AdminFilter;
 use App\Filters\AuthenticationFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
@@ -33,6 +34,10 @@ class Filters extends BaseConfig
         'confirm'  => [
             AuthenticationFilter::class,
             ConfirmPasswordFilter::class,
+        ],
+        'admin'  => [
+            AuthenticationFilter::class,
+            AdminFilter::class,
         ],
         'verified' => EmailVerifiedFilter::class,
         'guest'    => RedirectAuthenticatedFilter::class,

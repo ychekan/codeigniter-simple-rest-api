@@ -26,7 +26,7 @@ class AuthenticationFilter extends AuthenticationFilterParent
 
         return $this->respond([
             'status' => ResponseInterface::HTTP_UNAUTHORIZED,
-            'error' => false,
+            'error' => true,
             'messages' => ApiCode::Unauthorized,
             'data' => [
                 'error' => ApiCode::Unauthorized

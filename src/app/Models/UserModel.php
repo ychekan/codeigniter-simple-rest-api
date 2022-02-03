@@ -64,7 +64,7 @@ class UserModel extends Model implements UserProviderInterface
         'sendConfirmEmail'
     ];
     protected $beforeUpdate = [
-        'hashPassword'
+        'hashPassword', 'generateHash'
     ];
     protected $afterUpdate = [];
     protected $beforeFind = [];
@@ -109,6 +109,9 @@ class UserModel extends Model implements UserProviderInterface
      */
     public function generateHash(array $data = []): array
     {
+        if (isset($data['data']['verified_at'])) {
+            return $data;
+        }
         if (!isset($data['data']['hash'])) {
             helper('text');
             $data['data']['hash'] = random_string('alpha', 32);
@@ -123,12 +126,14 @@ class UserModel extends Model implements UserProviderInterface
      */
     public function sendConfirmEmail(array $data)
     {
-        Events::trigger(
-            VerifyEmailInterface::class,
-            $data['data']['email'],
-            $data['data']['name'],
-            $data['data']['hash']
-        );
+        if (!isset($data['data']['verified_at'])) {
+            Events::trigger(
+                VerifyEmailInterface::class,
+                $data['data']['email'],
+                $data['data']['name'],
+                $data['data']['hash']
+            );
+        }
     }
 
     /**

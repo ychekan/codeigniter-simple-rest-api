@@ -2,9 +2,11 @@
 
 namespace App\Services\Users;
 
+use App\Entities\User;
 use App\Enums\UserType;
 use App\Models\UserModel;
 use App\Services\MainService;
+use Carbon\Carbon;
 use CodeIgniter\Events\Events;
 use Fluent\Auth\Contracts\ResetPasswordInterface;
 
@@ -101,12 +103,63 @@ class UserService extends MainService
 
     /**
      * @param $id
-     * @return array|object
+     * @return array|object|null
      */
-    public function getUserById($id): UserModel
+    public function getUserById($id)
     {
         return (new UserModel())
             ->where('id', $id)
             ->first();
+    }
+
+    /**
+     * @param $request
+     * @param int $id
+     * @return bool
+     */
+    public function createUserForAdmin($request, int $id = 0): bool
+    {
+        try {
+            $userModel = new UserModel();
+            if ($id) {
+                $userModel = (new UserModel())
+                    ->where('id', $id)
+                    ->first();
+            }
+
+            $data = [
+                "email" => $request->getVar('email') ?? $userModel->email,
+                "username" => $request->getVar('username') ?? $userModel->username,
+                "name" => $request->getVar('name') ?? $userModel->name,
+                "role_id" => $request->getVar('role') ?? $userModel->role_id,
+            ];
+
+            if ($request->getVar('password') !== null) {
+                $data["password"] = $request->getVar('password');
+            }
+            if ($request->getVar('is_verified') !== null) {
+                $data["verified_at"] = +$request->getVar("is_verified") ? Carbon::now() : null;
+            }
+
+            if ($id) {
+                return (new UserModel())
+                    ->where('id', $id)
+                    ->set($data)
+                    ->update();
+            }
+
+            return $userModel->save($data);
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return bool
+     */
+    public function deleteUserForAdmin(int $id = 0): bool
+    {
+        return (new UserModel())->delete($id);
     }
 }
