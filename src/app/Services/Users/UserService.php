@@ -98,4 +98,15 @@ class UserService extends MainService
             ])
             ->update();
     }
+
+    /**
+     * @param $id
+     * @return array|object
+     */
+    public function getUserById($id): UserModel
+    {
+        return (new UserModel())
+            ->where('id', $id)
+            ->first();
+    }
 }

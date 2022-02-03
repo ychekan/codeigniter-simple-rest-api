@@ -4,6 +4,7 @@ namespace Config;
 
 use App\Notifications\ForgotPasswordNotification;
 use App\Notifications\VerifyEmailNotification;
+use App\Providers\AuthServiceProvider;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Exceptions\FrameworkException;
 use Fluent\Auth\Contracts\ResetPasswordInterface;
@@ -52,6 +53,11 @@ Events::on('pre_system', static function () {
         Services::toolbar()->respond();
     }
 });
+
+/**
+ * For use auth guard
+ */
+Events::on('pre_system', [AuthServiceProvider::class, 'register']);
 
 /**
  * --------------------------------------------------------------------

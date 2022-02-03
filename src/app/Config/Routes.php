@@ -43,6 +43,15 @@ $routes->group('api', function ($routes) {
     $routes->post('logout', 'Api\AuthController::logout', ['filter' => 'auth:api']);
     $routes->post('refresh', 'Api\AuthController::refresh', ['filter' => 'auth:api']);
     $routes->get('profile', 'Api\AuthController::profile', ['filter' => 'auth:api']);
+
+    $routes->get('users/show', 'Api\UsersController::show');
+//    $routes->group('users', function ($routes) {
+////        $routes->get('/', 'Api\UserController::index');
+//        $routes->get('users/view', 'Api\UsersController::view');
+////        $routes->post('create', 'Api\UserController::create');
+////        $routes->post('update', 'Api\UserController::update');
+////        $routes->post('delete', 'Api\UserController::delete');
+//    });
 });
 
 /*
