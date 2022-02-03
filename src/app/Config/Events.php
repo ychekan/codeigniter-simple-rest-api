@@ -2,8 +2,12 @@
 
 namespace Config;
 
+use App\Notifications\ForgotPasswordNotification;
+use App\Notifications\VerifyEmailNotification;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Exceptions\FrameworkException;
+use Fluent\Auth\Contracts\ResetPasswordInterface;
+use Fluent\Auth\Contracts\VerifyEmailInterface;
 
 /*
  * --------------------------------------------------------------------
@@ -47,4 +51,20 @@ Events::on('pre_system', static function () {
         Events::on('DBQuery', 'CodeIgniter\Debug\Toolbar\Collectors\Database::collect');
         Services::toolbar()->respond();
     }
+});
+
+/**
+ * --------------------------------------------------------------------
+ * CodeIgniter4 Authentication Listeners.
+ * --------------------------------------------------------------------
+ * This event will be dispatch to send reset password and verify email,
+ * you are free to implement this dispatcher, example using
+ * twilio service to send sms.
+ */
+Events::on(ResetPasswordInterface::class, function ($email, $name, $hash) {
+    (new ForgotPasswordNotification($email, $name, $hash))->send();
+});
+
+Events::on(VerifyEmailInterface::class, function ($email, $name, $hash) {
+    (new VerifyEmailNotification($email, $name, $hash))->send();
 });

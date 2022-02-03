@@ -350,11 +350,10 @@
                                 <tr>
                                     <td>
                                         <p>Hi <?php echo $name; ?>,</p>
-                                        <p>You need to confirm you email.</p>
+                                        <p>You need to reset password?</p>
 
-                                        <p>For confirmation your account go to this <a href="<?php echo base_url() . '/user/verify/' . $hash; ?>">link.</a></p>
-                                        <p>If you have some problems with opened link then try to copy this url in browser and open page</p>
-                                        <p><?php echo base_url() . '/user/verify/' . $hash; ?></p>
+                                        <p>Go to this <a href="<?php echo base_url() . '/user/reset-password/' . $hash; ?>">link.</a></p>
+                                        <p>If you have problems with an open link or you have not tried to reset your password, let us know immediately by email: <a href="mailto:<?php echo env('ADMIN_EMAIL'); ?>"></p>
                                     </td>
                                 </tr>
                             </table>

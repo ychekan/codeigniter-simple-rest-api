@@ -4,7 +4,7 @@ namespace App\Validators\Api\Auth;
 
 use App\Validators\MainValidator;
 
-class LoginValidator extends MainValidator
+class ForgotPasswordValidator extends MainValidator
 {
     /**
      * @return string[]
@@ -12,8 +12,7 @@ class LoginValidator extends MainValidator
     public static function rules(): array
     {
         return [
-            "email" => "required|valid_email|min_length[6]|max_length[100]",
-            "password" => "required|min_length[6]|max_length[50]|validateUser[email, password]",
+            "email" => "required|valid_email|min_length[6]|max_length[100]|isVerification[email]",
         ];
     }
 
@@ -26,14 +25,9 @@ class LoginValidator extends MainValidator
             "email" => [
                 "required" => "Email required",
                 "valid_email" => "Email address is not in format",
+                "isVerification" => "Email address is not verification",
                 "min_length" => "You can't to use email is less 6 characters",
                 "max_length" => "You can't to use email is more 100 characters",
-            ],
-            "password" => [
-                "required" => "Password is required",
-                "min_length" => "You can't to use password is less 6 characters",
-                "max_length" => "You can't to use password is more 50 characters",
-                'validateUser' => 'Invalid login or password credentials provided'
             ],
         ];
     }

@@ -2,13 +2,17 @@
 
 namespace Config;
 
+use App\Filters\AuthenticationFilter;
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
 use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\SecureHeaders;
-use App\Filters\AuthFilter;
+use Fluent\Auth\Filters\ConfirmPasswordFilter;
+use Fluent\Auth\Filters\EmailVerifiedFilter;
+use Fluent\Auth\Filters\RedirectAuthenticatedFilter;
+use Fluent\Auth\Filters\ThrottleFilter;
 
 class Filters extends BaseConfig
 {
@@ -24,7 +28,15 @@ class Filters extends BaseConfig
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'auth' => AuthFilter::class
+
+        'auth'     => AuthenticationFilter::class,
+        'confirm'  => [
+            AuthenticationFilter::class,
+            ConfirmPasswordFilter::class,
+        ],
+        'verified' => EmailVerifiedFilter::class,
+        'guest'    => RedirectAuthenticatedFilter::class,
+        'throttle' => ThrottleFilter::class,
     ];
 
     /**

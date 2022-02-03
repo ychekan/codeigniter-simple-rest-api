@@ -6,7 +6,6 @@ use App\Enums\ApiCode;
 use CodeIgniter\RESTful\ResourceController;
 use Config\Services;
 use Exception;
-use Firebase\JWT\JWT;
 
 class UserController extends ResourceController
 {

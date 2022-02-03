@@ -2,25 +2,40 @@
 
 namespace App\Models;
 
+use CodeIgniter\Events\Events;
 use CodeIgniter\Model;
-use Config\Services;
+use App\Entities\User;
 use Exception;
+use Fluent\Auth\Contracts\UserProviderInterface;
+use Fluent\Auth\Contracts\VerifyEmailInterface;
+use Fluent\Auth\Traits\UserProviderTrait;
+use Tatter\Relations\Traits\ModelTrait;
 
-class UserModel extends Model
+class UserModel extends Model implements UserProviderInterface
 {
+    use UserProviderTrait;
+    use ModelTrait;
+
     protected $DBGroup = 'default';
     protected $table = 'users';
     protected $primaryKey = 'id';
+    protected $with = 'roles';
+    /**
+     * The format that the results should be returned as.
+     * Will be overridden if the as* methods are used.
+     *
+     * @var User
+     */
+    protected $returnType = User::class;
     protected $useAutoIncrement = true;
     protected $insertID = 0;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
+
+    protected $useSoftDeletes = true;
     protected $protectFields = false;
     protected $allowedFields = [
         "email",
         "username",
         "name",
-//        "password",
         "role_id",
         "hash",
         "verified_at",
@@ -29,7 +44,7 @@ class UserModel extends Model
 
     // Dates
     protected $useTimestamps = true;
-    protected $dateFormat = 'datetime';
+    protected $dateFormat = 'date';
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
     protected $deletedField = 'deleted_at';
@@ -57,31 +72,46 @@ class UserModel extends Model
     protected $beforeDelete = [];
     protected $afterDelete = [];
 
+    public $has_one = [
+        // define the relationship to the boss
+        'roles' => array(
+            'class' => 'RolesModel',
+        )
+    ];
+
+
     /**
      * @param array $data
      * @return array
      */
-    protected function hashPassword(array $data)
+    public function hashPassword(array $data): array
     {
         if (!isset($data['data']['password'])) {
             return $data;
         }
-        $data['data']['password'] = password_hash($data['data']['password'], PASSWORD_DEFAULT);
+        $data['data']['password'] = $this->hashPasswordString($data['data']['password']);
 
         return $data;
     }
 
     /**
-     * @param $data
+     * @param $str
+     * @return string
+     */
+    public function hashPasswordString($str): string
+    {
+        return password_hash($str, PASSWORD_DEFAULT);
+    }
+
+    /**
+     * @param array $data
      * @return array
      */
-    public function generateHash($data): array
+    public function generateHash(array $data = []): array
     {
         if (!isset($data['data']['hash'])) {
             helper('text');
-
             $data['data']['hash'] = random_string('alpha', 32);
-
             return $data;
         }
         return $data;
@@ -93,18 +123,12 @@ class UserModel extends Model
      */
     public function sendConfirmEmail(array $data)
     {
-        $email = Services::email();
-
-        $email->setFrom('gromret@gmail.com', 'CodeIgniter Project');
-        $email->setTo($data['data']['email']);
-
-        $email->setSubject('Email Test');
-        $email->setMessage(view('emails/confirm-email', [
-            'name' => $data['data']['name'],
-            'hash' => $data['data']['hash'],
-        ]));
-
-        $email->send();
+        Events::trigger(
+            VerifyEmailInterface::class,
+            $data['data']['email'],
+            $data['data']['name'],
+            $data['data']['hash']
+        );
     }
 
     /**
@@ -123,5 +147,36 @@ class UserModel extends Model
             throw new Exception('User does not exist for specified email address');
         }
         return $user;
+    }
+
+    /**
+     * @param string $hash
+     * @return array|object
+     * @throws Exception
+     */
+    public function findUserByHash(string $hash)
+    {
+        $user = $this
+            ->asArray()
+            ->where(['hash' => $hash])
+            ->first();
+
+        if (!$user) {
+            throw new Exception('User does not exist for specified hash');
+        }
+        return $user;
+    }
+
+    /**
+     * @param string $hash
+     * @return bool
+     * @throws Exception
+     */
+    public function existUserByHash(string $hash): bool
+    {
+        return !!$this
+            ->asArray()
+            ->where(['hash' => $hash])
+            ->first();
     }
 }

@@ -3,7 +3,7 @@
 namespace Config;
 
 use CodeIgniter\Config\BaseService;
-use App\Services\Users\CreateUserService;
+use App\Services\Users\UserService;
 
 /**
  * Services Configuration file.
@@ -32,11 +32,11 @@ class Services extends BaseService
      */
 
     /**
-     * @return CreateUserService
+     * @return UserService
      */
-    public static function createUserService(): CreateUserService
+    public static function userService(): UserService
     {
-        return new CreateUserService();
+        return new UserService();
     }
 
 

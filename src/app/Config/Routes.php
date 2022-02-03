@@ -34,13 +34,15 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 
 // API
-$routes->group("api", ["namespace" => "App\Controllers\Api\Auth"] , function($routes){
-    $routes->post("register", "AuthController::register");
-    $routes->post("login", "AuthController::login");
-});
-
-$routes->group("api", ["namespace" => "App\Controllers\Api", "filter" => "auth"] , function($routes){
-    $routes->get("profile", "UserController::profile");
+$routes->group('api', function ($routes) {
+    $routes->post('register', 'Api\AuthController::register');
+    $routes->post('confirm-account', 'Api\AuthController::confirm');
+    $routes->post('forgot-password', 'Api\AuthController::forgotPassword');
+    $routes->post('reset-password', 'Api\AuthController::resetPassword');
+    $routes->post('login', 'Api\AuthController::login');
+    $routes->post('logout', 'Api\AuthController::logout', ['filter' => 'auth:api']);
+    $routes->post('refresh', 'Api\AuthController::refresh', ['filter' => 'auth:api']);
+    $routes->get('profile', 'Api\AuthController::profile', ['filter' => 'auth:api']);
 });
 
 /*
